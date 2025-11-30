@@ -74,37 +74,16 @@ public class Coordinate : IEquatable<Coordinate>
         y = Y;
     }
 
-    public IEnumerable<Coordinate> Range(Coordinate end)
+    public static IEnumerable<Coordinate> HorizontalRange(Coordinate start, int stepsize, int n)
     {
-        var list = new List<Coordinate> { this };
-
-        var diff = end - this;
-
-        int n;
-        int e;
-
-        if (diff.X != 0)
-        {
-            n = Math.Abs(diff.X);
-            e = diff.X / n;
-
-            return HorizontalRange(this, e, n, list);
-        }
-
-        n = Math.Abs(diff.Y);
-        e = diff.Y / n;
-
-        return VerticalRange(this, e, n, list);
-    }
-
-    public static IEnumerable<Coordinate> HorizontalRange(Coordinate start, int diff, int n, List<Coordinate> list)
-    {
+        var res = new List<Coordinate>();
+        
         for (var i = 1; i <= n; i++)
         {
-            list.Add(new Coordinate(start.X + (diff * i), start.Y));
+            res.Add(new Coordinate(start.X + stepsize * i, start.Y));
         }
 
-        return list;
+        return res;
     }
 
     public static IEnumerable<Coordinate> VerticalRange(Coordinate start, int diff, int n, List<Coordinate> list)

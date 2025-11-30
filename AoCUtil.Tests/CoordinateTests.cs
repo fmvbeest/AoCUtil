@@ -60,32 +60,30 @@ public class CoordinateTests
         Assert.Equal($"({c.X},{c.Y})", c.ToString());
     }
     
-    [Fact]
-    public void Neighbours_ShouldReturnAllNeighbours()
+    [Theory]
+    [MemberData(nameof(NeighbourData))]
+    public void Neighbours_ShouldReturnAllNeighbours(int x, int y, List<Coordinate> expected)
     {
-        var neighbours = new Coordinate(0, 0).Neighbours().ToArray();
-
+        var neighbours = new Coordinate(x, y).Neighbours().ToArray();
+        
         Assert.Equal(8, neighbours.Length);
-        Assert.Contains(new Coordinate( 1,  0), neighbours);
-        Assert.Contains(new Coordinate( 1, -1), neighbours);
-        Assert.Contains(new Coordinate( 0, -1), neighbours);
-        Assert.Contains(new Coordinate(-1, -1), neighbours);
-        Assert.Contains(new Coordinate(-1,  0), neighbours);
-        Assert.Contains(new Coordinate(-1,  1), neighbours);
-        Assert.Contains(new Coordinate( 0,  1), neighbours);
-        Assert.Contains(new Coordinate( 1,  1), neighbours);
+        foreach (var c in expected)
+        {
+            Assert.Contains(c, neighbours);
+        }
     }
     
-    [Fact]
-    public void NeighboursWithoutDiagonal_ShouldReturnHorizontalAndVerticalNeighbours()
+    [Theory]
+    [MemberData(nameof(OrthogonalNeighbourData))]
+    public void NeighboursWithoutDiagonal_ShouldReturnHorizontalAndVerticalNeighbours(int x, int y, List<Coordinate> expected)
     {
-        var neighbours = new Coordinate(0, 0).Neighbours(diagonal:false).ToArray();
+        var neighbours = new Coordinate(x, y).Neighbours(diagonal:false).ToArray();
 
         Assert.Equal(4, neighbours.Length);
-        Assert.Contains(new Coordinate( 1,  0), neighbours);
-        Assert.Contains(new Coordinate( 0, -1), neighbours);
-        Assert.Contains(new Coordinate(-1,  0), neighbours);
-        Assert.Contains(new Coordinate( 0,  1), neighbours);
+        foreach (var c in expected)
+        {
+            Assert.Contains(c, neighbours);
+        }
     }
 
     [Theory]
@@ -99,16 +97,40 @@ public class CoordinateTests
         Assert.Equal(expected, new Coordinate(x1, y1).IsAdjacentTo(new Coordinate(x2, y2)));
     }
     
-    [Fact]
-    public void NeighboursDiagonal_ShouldReturnDiagonalNeighbours()
+    [Theory]
+    [MemberData(nameof(DiagonalNeighbourData))]
+    public void NeighboursDiagonal_ShouldReturnDiagonalNeighbours(int x, int y, List<Coordinate> expected)
     {
         var neighbours = new Coordinate(0, 0).NeighboursDiagonal().ToArray();
 
         Assert.Equal(4, neighbours.Length);
-        Assert.Contains(new Coordinate( 1,  1), neighbours);
-        Assert.Contains(new Coordinate( 1, -1), neighbours);
-        Assert.Contains(new Coordinate(-1,  1), neighbours);
-        Assert.Contains(new Coordinate(-1, -1), neighbours);
+        foreach (var c in expected)
+        {
+            Assert.Contains(c, neighbours);
+        }
+    }
+    
+    [Theory]
+    [MemberData(nameof(Data))]
+    public void Deconstruct_ShouldReturnIndividualIntValues(int x, int y)
+    {
+        new Coordinate(x, y).Deconstruct(out var cx, out var cy);
+        
+        Assert.Equal(x, cx);
+        Assert.Equal(y, cy);
+    }
+    
+    [Theory]
+    [MemberData(nameof(HorizontalRangeData))]
+    public void HorizontalRange_ShouldReturnHorizontalLine(int x, int y, int stepsize, int n, List<Coordinate> expected)
+    {
+        var range = Coordinate.HorizontalRange(new Coordinate(x, y), stepsize, n).ToArray();
+        
+        Assert.Equal(n, range.Length);
+        foreach (var c in expected)
+        {
+            Assert.Contains(c, range);
+        }
     }
     
     public static IEnumerable<object[]> Data =>
@@ -120,4 +142,32 @@ public class CoordinateTests
             new object[] { -1, -1 },
         };
     
+    public static IEnumerable<object[]> HorizontalRangeData =>
+        new List<object[]>
+        {
+            new object[] { 0, 0, 1, 3, new List<Coordinate> { (1,0), (2,0), (3,0) } },
+            new object[] { 0, 0, 2, 3, new List<Coordinate> { (2,0), (4,0), (6,0) } },
+            new object[] { -1, -4, 1, 5, new List<Coordinate> { (0, -4), (1, -4), (2, -4), (3, -4), (4, -4) } },
+        };
+    
+    public static IEnumerable<object[]> NeighbourData =>
+        new List<object[]>
+        {
+            new object[] { 0, 0, DefaultNeighbours }
+        };
+    
+    public static IEnumerable<object[]> DiagonalNeighbourData =>
+        new List<object[]>
+        {
+            new object[] { 0, 0, new List<Coordinate> { (1, -1), (-1, -1), (-1, 1), (1, 1) } }
+        };
+    
+    public static IEnumerable<object[]> OrthogonalNeighbourData =>
+        new List<object[]>
+        {
+            new object[] { 0, 0, new List<Coordinate> { (1, 0), (0, -1), (-1, 0), (0, 1) } }
+        };
+
+    private static readonly List<Coordinate> DefaultNeighbours =
+        [(1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1), (1, 1)];
 }
