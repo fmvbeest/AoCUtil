@@ -2,7 +2,7 @@
 <package >
     <metadata>
         <id>AoCUtil</id>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
         <authors>fmvbeest</authors>
         <description>A library for various AoC utility functions and classes.</description>
     </metadata>

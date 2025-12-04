@@ -101,7 +101,7 @@ public class CoordinateTests
     [MemberData(nameof(DiagonalNeighbourData))]
     public void NeighboursDiagonal_ShouldReturnDiagonalNeighbours(int x, int y, List<Coordinate> expected)
     {
-        var neighbours = new Coordinate(0, 0).NeighboursDiagonal().ToArray();
+        var neighbours = new Coordinate(x, y).NeighboursDiagonal().ToArray();
 
         Assert.Equal(4, neighbours.Length);
         foreach (var c in expected)
