@@ -4,6 +4,10 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <PackageId>AoCUtil</PackageId>
+        <Version>1.2.0</Version>
+        <Authors>fmvbeest</Authors>
+        <Description>A library for various AoC utility functions and classes.</Description>
     </PropertyGroup>
 
 </Project>

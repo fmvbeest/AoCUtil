@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<package >
-    <metadata>
-        <id>AoCUtil</id>
-        <version>1.2.0</version>
-        <authors>fmvbeest</authors>
-        <description>A library for various AoC utility functions and classes.</description>
-    </metadata>
-</package>
