@@ -1,6 +1,6 @@
-﻿using AoCUtil;
+﻿using AoCUtil.Coordinates;
 
-namespace Tests;
+namespace Tests.Coordinates;
 
 public class CoordinateTests
 {
@@ -77,7 +77,7 @@ public class CoordinateTests
     [MemberData(nameof(OrthogonalNeighbourData))]
     public void NeighboursWithoutDiagonal_ShouldReturnHorizontalAndVerticalNeighbours(int x, int y, List<Coordinate> expected)
     {
-        var neighbours = new Coordinate(x, y).Neighbours(diagonal:false).ToArray();
+        var neighbours = new Coordinate(x, y).Neighbours(NeighbourOptions.Orthogonal).ToArray();
 
         Assert.Equal(4, neighbours.Length);
         foreach (var c in expected)
@@ -101,7 +101,7 @@ public class CoordinateTests
     [MemberData(nameof(DiagonalNeighbourData))]
     public void NeighboursDiagonal_ShouldReturnDiagonalNeighbours(int x, int y, List<Coordinate> expected)
     {
-        var neighbours = new Coordinate(x, y).NeighboursDiagonal().ToArray();
+        var neighbours = new Coordinate(x, y).Neighbours(NeighbourOptions.Diagonal).ToArray();
 
         Assert.Equal(4, neighbours.Length);
         foreach (var c in expected)

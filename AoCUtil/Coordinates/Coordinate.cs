@@ -1,4 +1,4 @@
-namespace AoCUtil;
+namespace AoCUtil.Coordinates;
 
 public class Coordinate : IEquatable<Coordinate>
 {
@@ -46,21 +46,22 @@ public class Coordinate : IEquatable<Coordinate>
         return Neighbours().Contains(x);
     }
 
-    public IEnumerable<Coordinate> Neighbours(bool diagonal = true)
+    public IEnumerable<Coordinate> Neighbours(NeighbourOptions options =  NeighbourOptions.All)
     {
-        var neighbours = new List<Coordinate> { (X - 1, Y), (X + 1, Y), (X, Y - 1), (X, Y + 1) };
-
-        if (diagonal)
+        var neighbours = new List<Coordinate>();
+        
+        if (options is NeighbourOptions.All or NeighbourOptions.Orthogonal)
         {
-            neighbours.AddRange(new List<Coordinate> { (X - 1, Y - 1), (X - 1, Y + 1), (X + 1, Y + 1), (X + 1, Y - 1) });
+            neighbours.AddRange(new List<Coordinate> { (X - 1, Y), (X + 1, Y), 
+                (X, Y - 1), (X, Y + 1) });
         }
-
+        if (options is NeighbourOptions.All or NeighbourOptions.Diagonal)
+        {
+            neighbours.AddRange(new List<Coordinate> { (X - 1, Y - 1), (X - 1, Y + 1), 
+                (X + 1, Y + 1), (X + 1, Y - 1) });
+        }
+        
         return neighbours;
-    }
-    
-    public IEnumerable<Coordinate> NeighboursDiagonal()
-    {
-        return new List<Coordinate> { (X - 1, Y - 1), (X - 1, Y + 1), (X + 1, Y + 1), (X + 1, Y - 1) };
     }
 
     public static implicit operator Coordinate((int x, int y) tuple)

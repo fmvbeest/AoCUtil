@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace AoCUtil;
+namespace AoCUtil.Coordinates;
 
 public class Grid2D
 {
@@ -130,7 +130,7 @@ public class Grid2D
             {
                 if (_grid[i, j] == _charToIntMap[c])
                 {
-                    if (singleValue) return new [] { new Coordinate(i, j) };
+                    if (singleValue) return [new Coordinate(i, j)];
                     
                     coordinates.Add((i,j));
                 }
@@ -150,16 +150,15 @@ public class Grid2D
         return coordinate.X >= 0 && coordinate.X < X && coordinate.Y >= 0 && coordinate.Y < Y;
     }
 
-    public IEnumerable<Coordinate> GetNeighboursWithValue(Coordinate coordinate, char c, bool diagonal = true)
+    public IEnumerable<Coordinate> GetNeighboursWithValue(Coordinate coordinate, char c, NeighbourOptions options = NeighbourOptions.All)
     {
-        return coordinate.Neighbours(diagonal).Where(OnGrid)
-            .Where(coordinate1 => GetValue(coordinate1) == _charToIntMap[c]);
+        return coordinate.Neighbours(options).Where(OnGrid)
+            .Where(co => GetValue(co) == _charToIntMap[c]);
     }
-    
-    public IEnumerable<Coordinate> GetNeighboursDiagonalWithValue(Coordinate coordinate, char c, bool diagonal = true)
+
+    public int CountNeighboursWithValue(Coordinate coordinate, char c, NeighbourOptions options = NeighbourOptions.All)
     {
-        return coordinate.NeighboursDiagonal().Where(OnGrid)
-            .Where(coordinate1 => GetValue(coordinate1) == _charToIntMap[c]);
+        return GetNeighboursWithValue(coordinate, c, options).Count();
     }
 
     public void SetGridValue(Coordinate coordinate, char c)
