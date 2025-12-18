@@ -109,7 +109,7 @@ public class CoordinateTests
             Assert.Contains(c, neighbours);
         }
     }
-    
+
     [Theory]
     [MemberData(nameof(Data))]
     public void Deconstruct_ShouldReturnIndividualIntValues(int x, int y)
@@ -133,6 +133,43 @@ public class CoordinateTests
         }
     }
     
+    [Theory]
+    [MemberData(nameof(HorizontalRangeInclusiveData))]
+    public void HorizontalRangeWithEnd_ShouldReturnHorizontalLine(Coordinate start, Coordinate end, List<Coordinate> expected)
+    {
+        var range = Coordinate.HorizontalRange(start, end).ToArray();
+        
+        foreach (var c in expected)
+        {
+            Assert.Contains(c, range);
+        }
+    }
+    
+    [Theory]
+    [MemberData(nameof(VerticalRangeData))]
+    public void VerticalRange_ShouldReturnVerticalLine(int x, int y, int stepsize, int n, List<Coordinate> expected)
+    {
+        var range = Coordinate.VerticalRange(new Coordinate(x, y), stepsize, n).ToArray();
+        
+        Assert.Equal(n, range.Length);
+        foreach (var c in expected)
+        {
+            Assert.Contains(c, range);
+        }
+    }
+    
+    [Theory]
+    [MemberData(nameof(VerticalRangeInclusiveData))]
+    public void VerticalRangeWithEnd_ShouldReturnVerticalLine(Coordinate start, Coordinate end, List<Coordinate> expected)
+    {
+        var range = Coordinate.VerticalRange(start, end).ToArray();
+        
+        foreach (var c in expected)
+        {
+            Assert.Contains(c, range);
+        }
+    }
+    
     public static IEnumerable<object[]> Data =>
         new List<object[]>
         {
@@ -147,7 +184,31 @@ public class CoordinateTests
         {
             new object[] { 0, 0, 1, 3, new List<Coordinate> { (1,0), (2,0), (3,0) } },
             new object[] { 0, 0, 2, 3, new List<Coordinate> { (2,0), (4,0), (6,0) } },
-            new object[] { -1, -4, 1, 5, new List<Coordinate> { (0, -4), (1, -4), (2, -4), (3, -4), (4, -4) } },
+            new object[] { -1, -4, 1, 5, new List<Coordinate> { (0,-4), (1,-4), (2,-4), (3,-4), (4,-4) } },
+        };
+    
+    public static IEnumerable<object[]> HorizontalRangeInclusiveData =>
+        new List<object[]>
+        {
+            new object[] { (0,0), (3,0), new List<Coordinate> { (0,0), (1,0), (2,0), (3,0) } },
+            new object[] { (0,0), (6,0), new List<Coordinate> { (0,0), (2,0), (4,0), (6,0) } },
+            new object[] { (-1,-4), (4,-4), new List<Coordinate> { (-1,-4), (0,-4), (1,-4), (2,-4), (3,-4), (4,-4) } },
+        };
+    
+    public static IEnumerable<object[]> VerticalRangeData =>
+        new List<object[]>
+        {
+            new object[] { 0, 0, 1, 3, new List<Coordinate> { (0,1), (0,2), (0,3) } },
+            new object[] { 0, 0, 2, 3, new List<Coordinate> { (0,2), (0,4), (0,6) } },
+            new object[] { -1, -4, 1, 5, new List<Coordinate> { (-1,-3), (-1,-2), (-1,-1), (-1,0), (-1,1) } },
+        };
+    
+    public static IEnumerable<object[]> VerticalRangeInclusiveData =>
+        new List<object[]>
+        {
+            new object[] { (0,0), (0,3), new List<Coordinate> { (0,0), (0,1), (0,2), (0,3) } },
+            new object[] { (0,0), (0,6),  new List<Coordinate> { (0,0), (0,2), (0,4), (0,6) } },
+            new object[] { (-1, -4), (-1,1), new List<Coordinate> { (-1,-3), (-1,-2), (-1,-1), (-1,0), (-1,1) } },
         };
     
     public static IEnumerable<object[]> NeighbourData =>

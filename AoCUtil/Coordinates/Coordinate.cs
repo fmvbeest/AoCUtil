@@ -75,26 +75,55 @@ public class Coordinate : IEquatable<Coordinate>
         y = Y;
     }
 
-    public static IEnumerable<Coordinate> HorizontalRange(Coordinate start, int stepsize, int n)
+    public static IEnumerable<Coordinate> HorizontalRange(Coordinate start, int stepsize, int n, bool inclusive = false)
     {
         var res = new List<Coordinate>();
+
+        var startFrom = inclusive ? 0 : 1;
         
-        for (var i = 1; i <= n; i++)
+        for (var i = startFrom; i <= n; i++)
         {
             res.Add(new Coordinate(start.X + stepsize * i, start.Y));
         }
 
         return res;
     }
-
-    public static IEnumerable<Coordinate> VerticalRange(Coordinate start, int diff, int n, List<Coordinate> list)
+    
+    public static IEnumerable<Coordinate> HorizontalRange(Coordinate start, Coordinate end, int stepsize = 1)
     {
-        for (var i = 1; i <= n; i++)
+        var res = new List<Coordinate>();
+        
+        for (var i = start.X; i <= end.X; i += stepsize)
         {
-            list.Add(new Coordinate(start.X, start.Y + (diff * i)));
+            res.Add(new Coordinate(i, start.Y));
         }
 
-        return list;
+        return res;
+    }
+
+    public static IEnumerable<Coordinate> VerticalRange(Coordinate start, int stepsize, int n, bool inclusive = false)
+    {
+        var res = new List<Coordinate>();
+        
+        var startFrom = inclusive ? 0 : 1;
+        for (var i = startFrom; i <= n; i++)
+        {
+            res.Add(new Coordinate(start.X, start.Y + stepsize * i));
+        }
+
+        return res;
+    }
+    
+    public static IEnumerable<Coordinate> VerticalRange(Coordinate start, Coordinate end, int stepsize = 1)
+    {
+        var res = new List<Coordinate>();
+        
+        for (var i = start.Y; i <= end.Y; i += stepsize)
+        {
+            res.Add(new Coordinate(start.X, i));
+        }
+
+        return res;
     }
 
     public long ManhattanDistance(Coordinate x)
